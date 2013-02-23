@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+
+  "name": "Pandoracle",
+  "description": "Download music from pandora",
+  "version": "0.1",
+
+  "background": {
+    "scripts": ["app.js"]
+  },
+
+  "browser_action": {
+     "name":"grab the bull by the horns",
+     "default_icon": {
+      "19": "icon.png"
+    },
+    "default_popup" : "index.html"
+  },
+
+  "permissions": [
+    "*://*.pandora.com/access/*",
+    "webRequest"
+  ]
+}
