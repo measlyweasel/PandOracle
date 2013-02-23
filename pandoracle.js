@@ -12,12 +12,13 @@ var prevSong = new Song();
 var getSongMeta = function getSongMeta() {
 	try {
 		var song = new Song();
-		song.title = document.getElementsByClassName("songTitle")[0].innerHTML;
-		song.artist = document.getElementsByClassName("artistSummary")[0].innerHTML;
-		song.album = document.getElementsByClassName("albumTitle")[0].innerHTML;
+		song.title = document.getElementsByClassName("songTitle")[0].text;
+		song.artist = document.getElementsByClassName("artistSummary")[0].text;
+		song.album = document.getElementsByClassName("albumTitle")[0].text;
 		song.art = document.getElementsByClassName("playerBarArt")[0].src;
 
-		if(song.toString() != prevSong.toString()) {
+		if(song.toString() != prevSong.toString()
+			&& song.art != prevSong.art) {
 			prevSong = song
 			chrome.extension.sendMessage(song);
 		}
@@ -25,7 +26,7 @@ var getSongMeta = function getSongMeta() {
 	catch(err) { }	
 };
 
-window.setInterval(getSongMeta,250);
+window.setInterval(getSongMeta,500);
 
 // chrome.extension.onMessage.addListener(
 // 	function(request, sender, sendResponse){

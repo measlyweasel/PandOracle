@@ -17,8 +17,16 @@
     "default_popup" : "index.html"
   },
 
+  "content_scripts": [
+    {
+      "matches": ["*://*.pandora.com/*"],
+      "js":["pandoracle.js"]
+    }
+  ],
+
   "permissions": [
     "*://*.pandora.com/access/*",
-    "webRequest"
+    "webRequest",
+    "notifications"
   ]
 }
