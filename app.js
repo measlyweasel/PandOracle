@@ -19,26 +19,15 @@ var notification = webkitNotifications.createNotification(
 )
 
 function downloadSong(song) {
-	// var downloadLink = document.createElement('a');
-	// downloadLink.href = song.url;
-	// downloadLink.download = song.toString() + ".mp4";
-	// var click = document.createEvent("MouseEvents");
-	// click.initMouseEvent(
-	// 	"click", true, false, self, 0, 0, 0, 0, 0
-	// 	, false, false, false, false, 0, null
-	// );
-	// downloadLink.dispatchEvent(click);
-
 	chrome.downloads.download(
 		{
 			url: song.url,
 			filename: song.toString() + ".mp4",
 			saveAs: true
 		},
-		function(downloadId){ }
+		function(downloadId){ /*download callback*/	}
 	);
-
-	notification.cancel();
+	notification.cancel()
 }
 
 function processSongMeta(songMeta){
