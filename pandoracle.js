@@ -27,14 +27,3 @@ var getSongMeta = function getSongMeta() {
 };
 
 window.setInterval(getSongMeta,500);
-
-// chrome.extension.onMessage.addListener(
-// 	function(request, sender, sendResponse){
-// 		if (request.type == "songMeta"){
-// 			console.log("meta request recieved")
-
-// 			var meta = getSongMeta();
-// 			sendResponse(meta)
-// 		}
-// 	}
-// );

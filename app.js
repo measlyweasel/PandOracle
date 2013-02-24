@@ -7,7 +7,7 @@ Song.prototype.artist="";
 Song.prototype.album="";
 Song.prototype.art="";
 Song.prototype.toString = function(){
-	return this.title+"-"+this.artist+"["+this.album+"]";
+	return this.title+" - "+this.artist+"["+this.album+"]";
 }
 
 var songs = []
@@ -18,12 +18,35 @@ var notification = webkitNotifications.createNotification(
 	"Body"
 )
 
-function processSongMeta(songMeta){
+function downloadSong(song) {
+	// var downloadLink = document.createElement('a');
+	// downloadLink.href = song.url;
+	// downloadLink.download = song.toString() + ".mp4";
+	// var click = document.createEvent("MouseEvents");
+	// click.initMouseEvent(
+	// 	"click", true, false, self, 0, 0, 0, 0, 0
+	// 	, false, false, false, false, 0, null
+	// );
+	// downloadLink.dispatchEvent(click);
 
-	songs[songs.length-1].title = songMeta.title;
-	songs[songs.length-1].artist = songMeta.artist;
-	songs[songs.length-1].album = songMeta.album;
-	songs[songs.length-1].art = songMeta.art;
+	chrome.downloads.download(
+		{
+			url: song.url,
+			filename: song.toString() + ".mp4",
+			saveAs: true
+		},
+		function(downloadId){ }
+	);
+
+	notification.cancel();
+}
+
+function processSongMeta(songMeta){
+	var songIndex = songs.length-1;
+	songs[songIndex].title = songMeta.title;
+	songs[songIndex].artist = songMeta.artist;
+	songs[songIndex].album = songMeta.album;
+	songs[songIndex].art = songMeta.art;
 
 	notification.cancel();
 	notification = webkitNotifications.createNotification(
@@ -31,15 +54,15 @@ function processSongMeta(songMeta){
 		songMeta.title + " - " + songMeta.artist,
 		"Download"
 	);
+	notification.onclick = function() { downloadSong(songs[songIndex]); }
 	notification.show();
 }
 
 chrome.webRequest.onResponseStarted.addListener(
 	function(details) {
-  		console.log("completed: " + details);
-		console.log("completed: " + details.url);
-
-		songs.push(new Song(details.url));
+		if(songs.length==0 || details.url!=songs[songs.length-1].url){
+			songs.push(new Song(details.url));
+		}
 	},
 	{ 	
 		urls: ["*://*.pandora.com/access/*"]

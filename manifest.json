@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "Pandoracle",
+  "name": "PandOracle",
   "description": "Download music from pandora",
   "version": "0.1",
 
@@ -27,6 +27,7 @@
   "permissions": [
     "*://*.pandora.com/access/*",
     "webRequest",
-    "notifications"
+    "notifications",
+    "downloads"
   ]
 }
