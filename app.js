@@ -6,11 +6,13 @@ Song.prototype.title="";
 Song.prototype.artist="";
 Song.prototype.album="";
 Song.prototype.art="";
+Song.prototype.tabId = 0;
 Song.prototype.toString = function(){
 	return this.title+" - "+this.artist+"["+this.album+"]";
 }
 
-var songs = []
+var songs = [];
+var tabId = 0;
 
 var notification = webkitNotifications.createNotification(
 	"icon.png",
@@ -19,23 +21,31 @@ var notification = webkitNotifications.createNotification(
 )
 
 function downloadSong(song) {
-	chrome.downloads.download(
+
+	if(chrome.downloads){
+		chrome.downloads.download(
 		{
 			url: song.url,
 			filename: song.toString() + ".mp4",
 			saveAs: true
 		},
 		function(downloadId){ /*download callback*/	}
-	);
+		);		
+	} else { //no chrome download api
+		var msg = {"type": "dl", "song":song};
+		chrome.tabs.sendMessage(song.tabId,msg);
+	}
+
 	notification.cancel()
 }
 
-function processSongMeta(songMeta){
+function processSongMeta(songMeta, tabId){
 	var songIndex = songs.length-1;
 	songs[songIndex].title = songMeta.title;
 	songs[songIndex].artist = songMeta.artist;
 	songs[songIndex].album = songMeta.album;
 	songs[songIndex].art = songMeta.art;
+	songs[songIndex].tabId = tabId;
 
 	notification.cancel();
 	notification = webkitNotifications.createNotification(
@@ -59,7 +69,9 @@ chrome.webRequest.onResponseStarted.addListener(
 );
 
 chrome.extension.onMessage.addListener(
-	function(songMeta,sender,sendResponse){
-		processSongMeta(songMeta);
+	function(msg,sender,sendResponse){
+		if(msg.type=="songMeta"){
+			processSongMeta(msg.songMeta, sender.tab.id);
+		}
 	}
 );
