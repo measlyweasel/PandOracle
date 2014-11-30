@@ -3,30 +3,28 @@
 
   "name": "PandOracle",
   "description": "Download music from pandora",
-  "version": "0.1",
+  "version": "0.2",
 
   "background": {
     "scripts": ["app.js"]
   },
 
   "browser_action": {
-     "name":"grab the bull by the horns",
-     "default_icon": "icon.png",
+    "name":"grab the bull by the horns",
+    "default_icon": "icon.png",
     "default_popup" : "index.html"
   },
 
   "content_scripts": [
     {
       "matches": ["*://*.pandora.com/*"],
-      "js":["pandoracle.js"]
+      "js":["vendor/jquery-2.1.1.min.js", "pandoracle.js" ]
     }
   ],
 
   "permissions": [
     "*://*.pandora.com/access/*",
     "webRequest",
-    "notifications",
-    "downloads",
     "tabs"
   ]
 }
